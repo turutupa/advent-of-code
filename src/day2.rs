@@ -35,12 +35,7 @@ pub fn run() -> Vec<String> {
     return vec![score_a.to_string()];
 }
 
-fn day2_a<'a>(
-    opponent_hand: &String,
-    your_hand: &String,
-    your_score: i32,
-    opponent_score: i32,
-) -> i32 {
+fn day2_a(opponent_hand: &String, your_hand: &String, your_score: i32, opponent_score: i32) -> i32 {
     let mut score: i32 = 0;
     if (your_hand == "X" && opponent_hand == "C")
         || (your_hand == "Y" && opponent_hand == "A")
