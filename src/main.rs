@@ -12,14 +12,14 @@ fn main() {
         println!("Please specify the day. Example: `cargo run -- day1`");
         process::exit(1);
     }
-    let chars: Vec<&str> = vec!["a", "b", "c", "d"]; // extend if a day has more than 4 problems
-    let mut i = 0;
     let solution: Vec<i32> = run_mod(&args[1]);
     if solution.len() == 0 {
         print!("There is no solution for {}, sorry!", &args[1]);
         return;
     }
     /* print solution for each part */
+    let mut i = 0;
+    let chars: Vec<&str> = vec!["a", "b", "c", "d"]; // extend if a day has more than 4 problems
     println!("Solution for {}", args[1]);
     for n in solution {
         println!("({}) {}", &chars[i], n);
