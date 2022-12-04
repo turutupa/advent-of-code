@@ -7,7 +7,7 @@ use std::cmp;
 use std::collections::HashSet;
 use std::string::String;
 
-pub fn run() -> Vec<String> {
+pub fn run() -> Vec<i32> {
     let file_path = "./inputs/day1_input.txt";
     let calories_by_line = get_input_by_line(file_path);
     let num_top_candy_accrued_elves = 3;
@@ -17,8 +17,8 @@ pub fn run() -> Vec<String> {
     ];
 }
 
-fn day1_a(calories_by_line: &Vec<String>) -> String {
-    let mut max = 0;
+fn day1_a(calories_by_line: &Vec<String>) -> i32 {
+    let mut max: i32 = 0;
     let mut counter = 0;
     for calories in calories_by_line {
         if calories == "" {
@@ -30,10 +30,10 @@ fn day1_a(calories_by_line: &Vec<String>) -> String {
         }
     }
 
-    return max.to_string();
+    return max;
 }
 
-fn day1_b(calories_by_line: &Vec<String>, n: i32) -> String {
+fn day1_b(calories_by_line: &Vec<String>, n: i32) -> i32 {
     let mut calories_sums: HashSet<i32> = HashSet::new();
     let mut counter = 0;
     for calories in calories_by_line {
@@ -57,5 +57,5 @@ fn day1_b(calories_by_line: &Vec<String>, n: i32) -> String {
         calories_sums.remove(&max);
         max = 0;
     }
-    return sum_top_n.to_string();
+    return sum_top_n;
 }

@@ -5,7 +5,7 @@
 use crate::helpers::get_input_by_line;
 use std::collections::HashMap;
 
-pub fn run() -> Vec<String> {
+pub fn run() -> Vec<i32> {
     let hands_by_line: Vec<String> = get_input_by_line("./inputs/day2_input.txt");
     let opponent_options: HashMap<String, i32> = HashMap::from([
         ("A".to_string(), 1),
@@ -19,7 +19,7 @@ pub fn run() -> Vec<String> {
     ]);
 
     let mut score_a: i32 = 0;
-    // let mut score_b: i32 = 0;
+    let mut score_b: i32 = 0;
     for line in hands_by_line {
         let hands: Vec<String> = line.split(" ").map(str::to_string).collect();
         if hands.len() != 2 {
@@ -29,30 +29,62 @@ pub fn run() -> Vec<String> {
         let your_hand: &String = &hands[1];
         let opponent_score = opponent_options.get(opponent_hand).unwrap();
         let your_score = your_options.get(your_hand).unwrap();
-        score_a = score_a + day2_a(&opponent_hand, &your_hand, *your_score, *opponent_score);
+        score_a = score_a + day2_a(*your_score, *opponent_score);
+        score_b = score_b + day2_b(*your_score, *opponent_score);
     }
 
-    return vec![score_a.to_string()];
+    return vec![score_a, score_b];
 }
 
-fn day2_a(opponent_hand: &String, your_hand: &String, your_score: i32, opponent_score: i32) -> i32 {
+fn day2_a(your_score: i32, opponent_score: i32) -> i32 {
     let mut score: i32 = 0;
-    if (your_hand == "X" && opponent_hand == "C")
-        || (your_hand == "Y" && opponent_hand == "A")
-        || (your_hand == "Z" && opponent_hand == "B")
+    /* check for winning hands */
+    if (your_score == 1 && opponent_score == 3)
+        || (your_score == 2 && opponent_score == 1)
+        || (your_score == 3 && opponent_score == 2)
     {
         score = score + 6;
     }
+    /* in case of draw */
     if your_score == opponent_score {
         score = score + 3;
     }
+    /* add value of your hand */
     return score + your_score;
 }
 
-fn day2_b(
-    hand_by_lines: &Vec<String>,
-    opponent_options: &HashMap<String, i32>,
-    your_options: &HashMap<String, i32>,
-) -> String {
-    return "b".to_string();
+// X: lose; Y: draw; Z: win
+// rock - paper - scissors
+fn day2_b(your_score: i32, opponent_score: i32) -> i32 {
+    let mut score: i32 = 0;
+    /* points for draw/win */
+    if your_score == 2 {
+        score = score + 3;
+    }
+    if your_score == 3 {
+        score = score + 6;
+    }
+    /* if lose, add points for losing hand */
+    if your_score == 1 {
+        let points: Vec<i32> = vec![0, 3, 1, 2];
+        score = score + points[opponent_score as usize];
+        // opponent -> your_hand:
+        //  1 -> 3;
+        //  2 -> 1;
+        //  3 -> 2;
+    }
+    /* if draw, same points as opponent_hand */
+    if your_score == 2 {
+        score = score + opponent_score;
+    }
+    /* if win, add points for winning hand */
+    if your_score == 3 {
+        let points: Vec<i32> = vec![0, 2, 3, 1];
+        score = score + points[opponent_score as usize];
+        // opponent -> your_hand:
+        //  1 -> 2;
+        //  2 -> 3;
+        //  3 -> 1;
+    }
+    return score;
 }
