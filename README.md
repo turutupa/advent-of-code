@@ -8,4 +8,6 @@ To supply enough magical energy, the expedition needs to retrieve a minimum of f
 Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants one star. Good luck!
 
 ## How To Run
-Execute `cargo run -- day{n}` where n is the number of the day in advent of code. Example: `cargo run -- day1`
+Execute `cargo run -- day{n}` where n is the number of the day in advent of code. Example: `cargo run -- day1`. And the output will be `(a)` and `(b)` for each part.
+
+

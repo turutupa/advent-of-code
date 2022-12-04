@@ -15,7 +15,7 @@ fn main() {
         let mut i = 0;
         let solution: Vec<String> = run_mod(&args[1]);
         if solution.len() == 0 {
-            print!("There is no solution for {}", &args[1]);
+            print!("There is no solution for {}, sorry!", &args[1]);
             return;
         }
         println!("Solution for {}", args[1]);
