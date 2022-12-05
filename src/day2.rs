@@ -65,26 +65,26 @@ fn day2_b(your_score: i32, opponent_score: i32) -> i32 {
         score = score + 6;
     }
     /* if lose, add points for losing hand */
+    // opponent -> your_hand:
+    //  1 -> 3;
+    //  2 -> 1;
+    //  3 -> 2;
     if your_score == 1 {
         let points: Vec<i32> = vec![0, 3, 1, 2];
         score = score + points[opponent_score as usize];
-        // opponent -> your_hand:
-        //  1 -> 3;
-        //  2 -> 1;
-        //  3 -> 2;
     }
     /* if draw, same points as opponent_hand */
     if your_score == 2 {
         score = score + opponent_score;
     }
     /* if win, add points for winning hand */
+    // opponent -> your_hand:
+    //  1 -> 2;
+    //  2 -> 3;
+    //  3 -> 1;
     if your_score == 3 {
         let points: Vec<i32> = vec![0, 2, 3, 1];
         score = score + points[opponent_score as usize];
-        // opponent -> your_hand:
-        //  1 -> 2;
-        //  2 -> 3;
-        //  3 -> 1;
     }
     return score;
 }

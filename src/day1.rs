@@ -8,7 +8,7 @@ use std::collections::HashSet;
 use std::string::String;
 
 pub fn run() -> Vec<i32> {
-    let calories_by_line = get_input_for_day(1);
+    let calories_by_line: Vec<String> = get_input_for_day(1);
     let num_top_candy_accrued_elves = 3;
     return vec![
         day1_a(&calories_by_line),
