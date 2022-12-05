@@ -2,7 +2,7 @@
 // part1: https://adventofcode.com/2022/day/1
 // part1: https://adventofcode.com/2022/day/1#part2
 
-use crate::helpers::get_input_for_day;
+use crate::read_inputs::get_input_for_day;
 use std::cmp;
 use std::collections::HashSet;
 use std::string::String;
@@ -18,14 +18,14 @@ pub fn run() -> Vec<i32> {
 
 fn day1_a(calories_by_line: &Vec<String>) -> i32 {
     let mut max: i32 = 0;
-    let mut counter = 0;
+    let mut running_sum = 0;
     for calories in calories_by_line {
         if calories == "" {
-            max = cmp::max(max, counter);
-            counter = 0;
+            max = cmp::max(max, running_sum);
+            running_sum = 0;
         } else {
             let num: i32 = calories.trim().parse().unwrap();
-            counter = counter + num;
+            running_sum = running_sum + num;
         }
     }
 
@@ -34,27 +34,27 @@ fn day1_a(calories_by_line: &Vec<String>) -> i32 {
 
 fn day1_b(calories_by_line: &Vec<String>, n: i32) -> i32 {
     let mut calories_sums: HashSet<i32> = HashSet::new();
-    let mut counter = 0;
+    let mut running_sum = 0;
     for calories in calories_by_line {
         if calories == "" {
-            calories_sums.insert(counter);
-            counter = 0;
+            calories_sums.insert(running_sum);
+            running_sum = 0;
         } else {
             let num: i32 = calories.trim().parse().unwrap();
-            counter = counter + num;
+            running_sum = running_sum + num;
         }
     }
     let mut sum_top_n = 0;
-    let mut max: i32 = 0;
+    let mut running_max: i32 = 0;
     for _ in 0..n {
         for x in calories_sums.iter() {
-            if x > &max {
-                max = *x;
+            if x > &running_max {
+                running_max = *x;
             }
         }
-        sum_top_n = sum_top_n + max;
-        calories_sums.remove(&max);
-        max = 0;
+        sum_top_n = sum_top_n + running_max;
+        calories_sums.remove(&running_max);
+        running_max = 0;
     }
     return sum_top_n;
 }

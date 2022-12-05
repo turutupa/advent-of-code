@@ -2,7 +2,7 @@
 // part1: https://adventofcode.com/2022/day/2
 // part2: https://adventofcode.com/2022/day/2#part2
 
-use crate::helpers::get_input_for_day;
+use crate::read_inputs::get_input_for_day;
 use std::collections::HashMap;
 
 pub fn run() -> Vec<i32> {

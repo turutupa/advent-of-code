@@ -5,7 +5,7 @@ use std::process;
 mod day1;
 mod day2;
 mod day3;
-mod helpers;
+mod read_inputs;
 
 type Runnable = fn() -> Vec<i32>;
 
