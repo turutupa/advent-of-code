@@ -2,14 +2,13 @@
 // part1: https://adventofcode.com/2022/day/1
 // part1: https://adventofcode.com/2022/day/1#part2
 
-use crate::helpers::get_input_by_line;
+use crate::helpers::get_input_for_day;
 use std::cmp;
 use std::collections::HashSet;
 use std::string::String;
 
 pub fn run() -> Vec<i32> {
-    let file_path = "./inputs/day1_input.txt";
-    let calories_by_line = get_input_by_line(file_path);
+    let calories_by_line = get_input_for_day(1);
     let num_top_candy_accrued_elves = 3;
     return vec![
         day1_a(&calories_by_line),

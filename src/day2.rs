@@ -2,11 +2,11 @@
 // part1: https://adventofcode.com/2022/day/2
 // part2: https://adventofcode.com/2022/day/2#part2
 
-use crate::helpers::get_input_by_line;
+use crate::helpers::get_input_for_day;
 use std::collections::HashMap;
 
 pub fn run() -> Vec<i32> {
-    let hands_by_line: Vec<String> = get_input_by_line("./inputs/day2_input.txt");
+    let hands_by_line: Vec<String> = get_input_for_day(2);
     let opponent_options: HashMap<String, i32> = HashMap::from([
         ("A".to_string(), 1),
         ("B".to_string(), 2),
