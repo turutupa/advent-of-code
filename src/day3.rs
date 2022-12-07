@@ -37,15 +37,24 @@ fn day3_b(rucksacks_by_line: &Vec<String>, groups_of_n: i32) -> i32 {
     for line in rucksacks_by_line {
         if i == groups_of_n - 1 {
             for (_, c) in line.chars().enumerate() {
-                if map.contains_key(&c) {
+                if map.contains_key(&c) && *map.get(&c).unwrap() == groups_of_n - 1 {
                     score = score + get_char_val(c);
                     map.clear();
+                    i = 0;
+                    break;
                 }
             }
-            i = 0;
         } else {
+            let mut set: HashSet<char> = HashSet::new();
             for (_, c) in line.chars().enumerate() {
-                map.insert(c, 1);
+                set.insert(c);
+            }
+            for x in set.into_iter() {
+                if map.contains_key(&x) {
+                    map.insert(x, *map.get(&x).unwrap() + 1);
+                } else {
+                    map.insert(x, 1);
+                }
             }
             i = i + 1;
         }
