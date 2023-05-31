@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, VecDeque};
 
 use crate::read_inputs::get_input_for_day;
 
@@ -21,18 +21,26 @@ fn part_b(input_by_line: &mut Vec<String>) -> i32 {
 }
 
 struct Snake {
-    x: u32,
-    y: u32,
+    x: i32,
+    y: i32,
     visited: HashSet<String>,
-    next: Box<Snake>,
+}
+
+impl Default for Snake {
+    fn default() -> Self {
+        return Snake {
+            x: 0,
+            y: 0,
+            visited: HashSet::new(),
+        };
+    }
 }
 
 fn snake(moves: &mut Vec<String>, len: u32) -> i32 {
-    let mut visited: HashSet<String> = HashSet::new();
-    let mut h_x = 0;
-    let mut h_y = 0;
-    let mut t_x = 0;
-    let mut t_y = 0;
+    let mut snake = VecDeque::new();
+    for _ in 0..len {
+        snake.push_back(Snake::default());
+    }
     while !moves.is_empty() {
         let l = moves.remove(0);
         let mut line = l.split_whitespace();
@@ -40,24 +48,30 @@ fn snake(moves: &mut Vec<String>, len: u32) -> i32 {
         let amount = line.next().unwrap();
 
         for _ in 0..amount.parse().unwrap() {
+            let mut head = snake.front().as_deref().unwrap();
             match direction {
-                "U" => h_y += 1,
-                "D" => h_y -= 1,
-                "L" => h_x -= 1,
-                "R" => h_x += 1,
+                "U" => head.y += 1,
+                "D" => head.y -= 1,
+                "R" => head.x += 1,
+                "L" => head.x -= 1,
                 _ => println!("Something went wrong, I shouldn't be here! :S"),
             }
-            let (d_x, d_y): (i32, i32) = (h_x - t_x, h_y - t_y);
-            if d_y.abs() > 1 {
-                t_y = h_y - d_y.signum();
-                t_x = h_x;
+            let mut prev = head;
+            for i in 1..snake.len() {
+                let mut next = snake[i];
+                let (d_x, d_y): (i32, i32) = (prev.x - next.x, prev.y - next.y);
+                if d_y.abs() > 1 {
+                    next.y = prev.y - d_y.signum();
+                    next.x = prev.x;
+                }
+                if d_x.abs() > 1 {
+                    next.x = prev.x - d_x.signum();
+                    next.y = prev.y;
+                }
+                next.visited.insert(format!("{}-{}", next.x, next.y));
+                prev = &next;
             }
-            if d_x.abs() > 1 {
-                t_x = h_x - d_x.signum();
-                t_y = h_y;
-            }
-            visited.insert(format!("{t_x}-{t_y}"));
         }
     }
-    return visited.len() as i32;
+    return snake[snake.len() - 1].visited.len() as i32;
 }
