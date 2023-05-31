@@ -11,15 +11,16 @@ pub fn run() -> Vec<i32> {
 }
 
 fn part_a(input_by_line: &mut Vec<String>) -> i32 {
-    let snake_len = 1;
+    let snake_len = 2;
     return snake(input_by_line, snake_len);
 }
 
 fn part_b(input_by_line: &mut Vec<String>) -> i32 {
-    let snake_len = 9;
+    let snake_len = 10;
     return snake(input_by_line, snake_len);
 }
 
+#[derive(Clone)]
 struct Snake {
     x: i32,
     y: i32,
@@ -48,7 +49,7 @@ fn snake(moves: &mut Vec<String>, len: u32) -> i32 {
         let amount = line.next().unwrap();
 
         for _ in 0..amount.parse().unwrap() {
-            let mut head = snake.front().as_deref().unwrap();
+            let mut head = snake.pop_front().unwrap();
             match direction {
                 "U" => head.y += 1,
                 "D" => head.y -= 1,
@@ -56,22 +57,24 @@ fn snake(moves: &mut Vec<String>, len: u32) -> i32 {
                 "L" => head.x -= 1,
                 _ => println!("Something went wrong, I shouldn't be here! :S"),
             }
-            let mut prev = head;
-            for i in 1..snake.len() {
-                let mut next = snake[i];
-                let (d_x, d_y): (i32, i32) = (prev.x - next.x, prev.y - next.y);
-                if d_y.abs() > 1 {
+            let mut prev = &mut head.clone();
+            for next in snake.iter_mut() {
+                let (d_x, d_y) = (prev.x - next.x, prev.y - next.y);
+                if d_y.abs() > 1 && d_x.abs() > 1 {
+                    next.y = prev.y - d_y.signum();
+                    next.x = prev.x - d_x.signum();
+                } else if d_y.abs() > 1 {
                     next.y = prev.y - d_y.signum();
                     next.x = prev.x;
-                }
-                if d_x.abs() > 1 {
+                } else if d_x.abs() > 1 {
                     next.x = prev.x - d_x.signum();
                     next.y = prev.y;
                 }
-                next.visited.insert(format!("{}-{}", next.x, next.y));
-                prev = &next;
+                next.visited.insert(format!("{}:{}", next.x, next.y));
+                prev = next;
             }
+            snake.push_front(head);
         }
     }
-    return snake[snake.len() - 1].visited.len() as i32;
+    return snake.pop_back().unwrap().visited.len() as i32;
 }
