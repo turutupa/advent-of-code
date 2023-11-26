@@ -3,6 +3,7 @@ use std::env;
 use std::process;
 
 mod day1;
+mod day10;
 mod day2;
 mod day3;
 mod day4;
@@ -25,6 +26,7 @@ fn get_days<'a>() -> HashMap<&'a str, Runnable> {
         ("day7", day7::run as Runnable),
         ("day8", day8::run as Runnable),
         ("day9", day9::run as Runnable),
+        ("day10", day10::run as Runnable),
     ]);
 }
 
