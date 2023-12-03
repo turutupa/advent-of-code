@@ -1,9 +1,7 @@
 import * as fs from 'fs';
+import { readPuzzle } from './readPuzzle';
 
-function part1() {
-  const filepath = './../inputs/day1.txt';
-  const input = fs.readFileSync(filepath, 'utf8');
-
+function part1(input: string) {
   let total = 0;
   for (let line of input.split('\n')) {
     let first = undefined;
@@ -26,10 +24,7 @@ function part1() {
   return total;
 }
 
-function part2() {
-  const filepath = './../inputs/day1.txt';
-  const input = fs.readFileSync(filepath, 'utf8');
-
+function part2(input: string) {
   const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 
   let total = 0;
@@ -46,7 +41,6 @@ function part2() {
         for (let j = 0; j < numbers.length; j++) {
           const num = numbers[j];
           if (line.slice(i, i + num.length) === num) {
-            console.log(line, num);
             if (first === undefined) first = j + 1;
             last = j + 1;
           }
@@ -63,5 +57,6 @@ function part2() {
   return total;
 }
 
-// console.log(part1())
-console.log(part2());
+const input: string = readPuzzle('day1');
+console.log('part 1', part1(input));
+console.log('part 2', part2(input));
