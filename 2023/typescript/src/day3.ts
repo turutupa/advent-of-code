@@ -61,6 +61,23 @@ function getAndReplaceNumber(matrix: string[][], coordinates: Coordinates): numb
   return Number(num);
 }
 
+function isGear(matrix: string[][], coordinates: Coordinates): boolean {
+  const [row, col] = coordinates;
+  for (let coords of surroundings) {
+    const [x, y] = coords;
+    const [i, j] = [row + x, col + y];
+    if (i < 0 || i >= matrix.length) continue;
+    if (j < 0 || j >= matrix[0].length) continue;
+    const symbol = matrix[i][j];
+    if (isNumber(symbol)) {
+      return true;
+    }
+  }
+  return true;
+}
+
+const gear = '*';
+
 function part1(input: string) {
   const matrix = buildMatrix(input);
   let partNumbersSum = 0;
@@ -76,15 +93,14 @@ function part1(input: string) {
 
 function part2(input: string) {
   const matrix = buildMatrix(input);
-  let partNumbersSum = 0;
+  let gearRatioSum = 0;
   for (let i = 0; i < matrix.length; i++) {
     for (let j = 0; j < matrix[0].length; j++) {
-      if (isPartNumber(matrix, [i, j])) {
-        partNumbersSum += getAndReplaceNumber(matrix, [i, j]);
+      if (matrix[i][j] === gear && isGear(matrix, [i, j])) {
       }
     }
   }
-  return partNumbersSum;
+  return gearRatioSum;
 }
 
 const input = readPuzzle('day3');
