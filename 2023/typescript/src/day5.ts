@@ -1,5 +1,26 @@
 import { readPuzzle } from './readPuzzle';
 
+function getSeedNumbers(lines: string[]): string {
+  return lines.shift()!.split(':')[1].trim();
+}
+
+function getSeeds(lines: string[]) {
+  return getSeedNumbers(lines)
+    .split(' ')
+    .map((x) => Number(x));
+}
+
+function getSeedPairs(lines: string[]): number[][] {
+  const seeds = getSeedNumbers(lines)
+    .split(' ')
+    .map((x) => Number(x));
+  const pairs = [];
+  for (let i = 0; i < seeds.length; i = i + 2) {
+    pairs.push([seeds[i], seeds[i + 1]]);
+  }
+  return pairs;
+}
+
 type Mapping = {
   [source: number]: number;
 };
@@ -15,16 +36,6 @@ function map(
     if (element >= source && element <= source + range) {
       const diff = element - source;
       mapping[element] = destination + diff;
-      if (element == 79) {
-        console.log();
-        console.log('element', element);
-        console.log('source', source);
-        console.log('destination', destination);
-        console.log('range', range);
-        console.log('diff', diff);
-        console.log('adjusted destination', destination + diff);
-        console.log();
-      }
     }
   }
 }
@@ -43,100 +54,60 @@ function parse(line: string) {
 
 function part1(input: string) {
   const lines: string[] = input.split('\n');
-  const seeds: number[] = lines
-    .shift()!
-    .split(':')[1]
-    .trim()
-    .split(' ')
-    .map((x) => Number(x));
+  let tracked: number[] = getSeeds(lines);
 
-  // remove blank line
-  lines.shift();
+  lines.shift(); // remove blank line
   lines.shift(); // seed-to-soil map:
 
-  const seedToSoil = {};
-  let line = lines.shift();
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(seeds, seedToSoil, source, destination, range);
-    line = lines.shift();
+  while (lines.length) {
+    const mapping = {};
+    let line = lines.shift();
+    while (line) {
+      const [destination, source, range] = parse(line);
+      map(tracked, mapping, source, destination, range);
+      line = lines.shift();
+    }
+    mapMissingElements(tracked, mapping);
+    tracked = Object.values(mapping);
   }
-  mapMissingElements(seeds, seedToSoil);
-  line = lines.shift();
 
-  console.log('seed to soil', seedToSoil);
-
-  const soilToFertilizer = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(seedToSoil), soilToFertilizer, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(seedToSoil), soilToFertilizer);
-  line = lines.shift();
-
-  console.log('soil to fertilizer', soilToFertilizer);
-
-  const fertilizerToWater = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(soilToFertilizer), fertilizerToWater, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(soilToFertilizer), fertilizerToWater);
-  line = lines.shift();
-
-  console.log('fertilizer to water', fertilizerToWater);
-
-  const waterToLight = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(fertilizerToWater), waterToLight, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(fertilizerToWater), waterToLight);
-  line = lines.shift();
-
-  console.log('water to light', waterToLight);
-
-  const lightToTemperature = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(waterToLight), lightToTemperature, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(waterToLight), lightToTemperature);
-  line = lines.shift();
-
-  console.log('light to temperature', lightToTemperature);
-
-  const temperatureToHumidity = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(lightToTemperature), temperatureToHumidity, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(lightToTemperature), temperatureToHumidity);
-  line = lines.shift();
-
-  console.log('temperature to humidity', temperatureToHumidity);
-
-  const humidityToLocation = {};
-  while (line) {
-    const [destination, source, range] = parse(line);
-    map(Object.values(temperatureToHumidity), humidityToLocation, source, destination, range);
-    line = lines.shift();
-  }
-  mapMissingElements(Object.values(temperatureToHumidity), humidityToLocation);
-  line = lines.shift();
-
-  console.log('humidity to location', humidityToLocation);
-
-  const location: number[] = Object.values(humidityToLocation);
-  return Math.min(...location);
+  return Math.min(...tracked);
 }
 
-function part2(input: string) {}
+function part2(input: string) {
+  const lines: string[] = input.split('\n');
+  const pairs: number[][] = getSeedPairs(lines);
+  console.log(pairs);
+
+  lines.shift(); // remove blank line
+  lines.shift(); // seed-to-soil map:
+
+  const s: Set<number> = new Set();
+  let tracked: number[] = [
+    ...pairs.reduce((acc, curr) => {
+      for (let i = curr[0]; i < curr[0] + curr[1]; i++) {
+        acc.add(i);
+      }
+      return acc;
+    }, s),
+  ];
+
+  console.log(tracked);
+
+  while (lines.length) {
+    const mapping = {};
+    let line = lines.shift();
+    while (line) {
+      const [destination, source, range] = parse(line);
+      map(tracked, mapping, source, destination, range);
+      line = lines.shift();
+    }
+    mapMissingElements(tracked, mapping);
+    tracked = Object.values(mapping);
+  }
+
+  return Math.min(...tracked);
+}
 
 const test = `seeds: 79 14 55 13
 
@@ -173,8 +144,9 @@ humidity-to-location map:
 56 93 4
 `;
 
-console.log('part 1 - test', part1(test));
+// console.log('part 1 - test', part1(test));
+console.log('part 2 - test', part2(test));
 
-const input = readPuzzle('day5');
-console.log('part 1', part1(input)); // solution: 51580674
+// const input = readPuzzle('day5');
+// console.log('part 1', part1(input)); // solution: 51580674
 // console.log('part 2', part2(input));
