@@ -82,18 +82,16 @@ function part2(input: string) {
   lines.shift(); // remove blank line
   lines.shift(); // seed-to-soil map:
 
-  const s: Set<number> = new Set();
-  let tracked: number[] = [
-    ...pairs.reduce((acc, curr) => {
-      for (let i = curr[0]; i < curr[0] + curr[1]; i++) {
-        acc.add(i);
-      }
-      return acc;
-    }, s),
-  ];
+  return pairs.reduce((acc, curr) => {
+    let min = acc;
+    for (let i = curr[0]; i < curr[0] + curr[1]; i++) {
+      min = Math.min(min, magic([...lines], [i]));
+    }
+    return min;
+  }, Infinity);
+}
 
-  console.log(tracked);
-
+function magic(lines: string[], tracked: number[]) {
   while (lines.length) {
     const mapping = {};
     let line = lines.shift();
@@ -105,7 +103,6 @@ function part2(input: string) {
     mapMissingElements(tracked, mapping);
     tracked = Object.values(mapping);
   }
-
   return Math.min(...tracked);
 }
 
@@ -141,12 +138,11 @@ temperature-to-humidity map:
 
 humidity-to-location map:
 60 56 37
-56 93 4
-`;
+56 93 4`;
 
-// console.log('part 1 - test', part1(test));
-console.log('part 2 - test', part2(test));
+// console.log('[test] part 1 ', part1(test));
+// console.log('[test] part 2', part2(test));
 
-// const input = readPuzzle('day5');
-// console.log('part 1', part1(input)); // solution: 51580674
-// console.log('part 2', part2(input));
+const input = readPuzzle('day5');
+console.log('part 1', part1(input)); // solution: 51580674
+console.log('part 2', part2(input));
