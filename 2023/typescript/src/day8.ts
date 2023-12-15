@@ -5,7 +5,7 @@ type Adjacency = Record<string, string[]>;
 const createAdjacencyList = (lines: string[]): Adjacency => {
   const adjacency: Adjacency = {};
   for (let line of lines) {
-    if (line === '') continue;
+    // if (line === '') continue;
     const key = line.split('=')[0].trim();
     const branches = line
       .split('=')[1]

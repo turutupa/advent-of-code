@@ -44,7 +44,7 @@ function sum(groups: number[]): number {
 }
 
 function getPermutations(line: string): number {
-  if (line === '') return 0;
+  // if (line === '') return 0;
   const [springs, groupsStr] = line.split(' ');
   let groups: number[] = [];
   if (groupsStr.indexOf(',') >= 0) {
