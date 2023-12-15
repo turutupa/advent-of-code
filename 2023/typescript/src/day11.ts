@@ -48,7 +48,6 @@ type Coordinates = [number, number];
 
 function getGalaxyCoordinates(lines: string[]): Coordinates[] {
   const coordinates: Coordinates[] = [];
-
   for (let i = 0; i < lines.length; i++) {
     for (let j = 0; j < lines[0].length; j++) {
       if (lines[i][j] === GALAXY) coordinates.push([i, j]);
@@ -69,30 +68,33 @@ function getPairs(galaxies: Coordinates[]): Pair[] {
   return pairs;
 }
 
+function minmax(a: number, b: number): [number, number] {
+  return [Math.min(a, b), Math.max(a, b)];
+}
+
 function getShortestPath(
   pair: [Coordinates, Coordinates],
   rows?: number[],
   cols?: number[],
 ): number {
   const [[fromX, fromY], [toX, toY]] = pair;
-  let distanceX = Math.abs(fromX - toX);
-  let distanceY = Math.abs(fromY - toY);
+  let distance = Math.abs(fromX - toX) + Math.abs(fromY - toY);
 
   if (rows && cols) {
     for (let row of rows) {
-      const coords = [fromX, toX].sort();
-      if (row >= coords[0] && row <= coords[1]) {
-        distanceX += EXPANSION_RATE - 1;
+      const [min, max] = minmax(fromX, toX);
+      if (row > min && row < max) {
+        distance += EXPANSION_RATE - 1;
       }
     }
     for (let col of cols) {
-      const coords = [fromY, toY].sort();
-      if (col >= coords[0] && col <= coords[1]) {
-        distanceX += EXPANSION_RATE - 1;
+      const [min, max] = minmax(fromY, toY);
+      if (col > min && col < max) {
+        distance += EXPANSION_RATE - 1;
       }
     }
   }
-  return distanceX + distanceY;
+  return distance;
 }
 
 function part1(input: string) {
